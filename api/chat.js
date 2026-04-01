@@ -42,7 +42,9 @@ export default async function handler(req, res) {
       reply: data.choices[0].message.content
     });
 
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
+  catch (error) {
+  return res.status(500).json({
+    error: error.message,
+    details: error.toString()
+  });
 }
