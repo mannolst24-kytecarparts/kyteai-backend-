@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // ✅ CORS FIX
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -22,11 +21,11 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-mini",
         messages: [
           {
             role: "system",
-            content: "You are KyteAI, expert in engine oils, filters, and Mannol products."
+            content: "You are KyteAI, expert in engine oils and car parts."
           },
           {
             role: "user",
@@ -38,13 +37,20 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    if (!response.ok) {
+      return res.status(500).json({
+        error: "OpenAI API error",
+        details: data
+      });
+    }
+
     return res.status(200).json({
       reply: data.choices[0].message.content
     });
 
-  catch (error) {
-  return res.status(500).json({
-    error: error.message,
-    details: error.toString()
-  });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message
+    });
+  }
 }
